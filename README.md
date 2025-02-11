@@ -22,14 +22,10 @@ This is a **Quiz Application** built using **React.js, HTML, CSS, and JavaScript
 quiz-app/
 ├── public/
 │   ├── index.html
-├── src/
 │   ├── components/
 │   │   ├── Quiz.js
 │   │   ├── Question.js
-│   │   ├── Score.js
-│   ├── assets/
-│   ├── App.js
-│   ├── index.js
+│   │   ├── Script.js
 │   ├── styles.css
 ├── package.json
 ├── README.md
