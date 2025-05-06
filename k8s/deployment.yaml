@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz-app
+  template:
+    metadata:
+      labels:
+        app: quiz-app
+    spec:
+      containers:
+        - name: quiz-container
+          image: charan195/quiz-app:latest
+          ports:
+            - containerPort: 80
