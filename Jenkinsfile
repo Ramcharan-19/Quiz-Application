@@ -4,14 +4,15 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/Ramcharan-19/Quiz-Application.git'
+                git branch: 'main', url: 'https://github.com/Ramcharan-19/Quiz-Application.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('quiz-app:latest')
+                    def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    docker.build("quiz-app:${gitCommit}")
                 }
             }
         }
@@ -21,7 +22,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'charan195', passwordVariable: 'amma_1979')]) {
                     script {
                         docker.withRegistry('', 'dockerhub-creds') {
-                            docker.image('quiz-app:latest').push('latest')
+                            docker.image("quiz-app:${gitCommit}").push('latest')
+                            docker.image("quiz-app:${gitCommit}").push(gitCommit)
                         }
                     }
                 }
@@ -30,7 +32,9 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl apply -f deployment.yaml'
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl apply -f deployment.yaml'
+                }
             }
         }
     }
