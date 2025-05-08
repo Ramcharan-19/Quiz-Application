@@ -13,7 +13,28 @@ spec:
         app: quiz-app
     spec:
       containers:
-        - name: quiz-container
-          image: charan195/quiz-app:latest
-          ports:
-            - containerPort: 80
+      - name: quiz-app
+        image: quiz-app
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-app-service
+spec:
+  type: NodePort
+  selector:
+    app: quiz-app
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30036
